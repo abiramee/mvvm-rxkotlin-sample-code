@@ -1,7 +1,8 @@
-package com.zanvent.mvvm_rxkotlin_sample
+package com.zanvent.mvvm_rxkotlin_sample.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.zanvent.mvvm_rxkotlin_sample.R
 
 class MainActivity : AppCompatActivity() {
 
