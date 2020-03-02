@@ -29,6 +29,8 @@ ext {
     dagger_version = "2.26"
     retrofit_version = "2.7.2"
     butterknife_version = "10.2.1"
+    moshi_version = "1.8.0"
+    lifecycle_version = "2.2.0"
 }
 
 task clean(type: Delete) {
