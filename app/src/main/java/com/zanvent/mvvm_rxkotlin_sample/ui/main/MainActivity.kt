@@ -52,10 +52,8 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private fun observeUsers() {
         viewModel.usersData.observe(this, androidx.lifecycle.Observer {
-            if (it != null) {
-                adapter.submitList(it)
-                adapter.notifyDataSetChanged()
-            }
+            adapter.submitList(it)
+            adapter.notifyDataSetChanged()
         })
     }
 }
