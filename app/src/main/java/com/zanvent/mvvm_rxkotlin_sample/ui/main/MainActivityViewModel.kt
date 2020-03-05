@@ -2,7 +2,6 @@ package com.zanvent.mvvm_rxkotlin_sample.ui.main
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -31,7 +30,7 @@ class MainActivityViewModel @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
-    private var _usersData = MutableLiveData<List<DetailedUser>>()
+    private var _usersData = MutableLiveData<List<DetailedUser>>(emptyList())
     val usersData: LiveData<List<DetailedUser>>
         get() = _usersData
 
@@ -43,13 +42,14 @@ class MainActivityViewModel @Inject constructor(
     val errorState: LiveData<Boolean>
         get() = _errorState
 
-    private val _initialUsers = MutableLiveData<List<DetailedUser>>(emptyList())
     private val _searchUsers = MutableLiveData<List<DetailedUser>>(emptyList())
-    private var isSearchEnabled = false;
+    val searchUsers: LiveData<List<DetailedUser>>
+        get() = _searchUsers;
     private var searchKeywordsPublishSubject: PublishSubject<String> = PublishSubject.create()
+    var isSearchEnabled = false;
+    private var searchItemCount  = 0
 
     init {
-        _initialUsers.value = ArrayList()
         getUsersData()
         observeSearchKeyword()
     }
@@ -69,15 +69,10 @@ class MainActivityViewModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onNext = {
-                    Log.e("hello", it.toString())
-                    _initialUsers.value = _initialUsers.value!!.plus(it)
-                    if (!isSearchEnabled) {
-                        _usersData.value = _initialUsers.value
-                    }
+                    _usersData.value = _usersData.value!!.plus(it)
                 },
                 onError = {
                     _errorState.value = true
-                    Log.e("hello", "error", it)
                 },
                 onComplete = {
                     _loadingState.value = View.GONE
@@ -92,30 +87,29 @@ class MainActivityViewModel @Inject constructor(
             .observeOn(Schedulers.io())
             .debounce(1, TimeUnit.SECONDS)
             .filter {
-                isSearchEnabled = true;
                 it.length > 3
             }
             .switchMap {
-                Log.e("hello", it)
+                isSearchEnabled = true;
+                _loadingState.postValue(View.VISIBLE)
                 usersService.getSearchUsersData(it).toObservable()
             }.flatMap {
+                searchItemCount = it.items.size
                 _searchUsers.postValue(emptyList())
-                Log.e("Hello", it.items.size.toString())
                 Observable.fromIterable(it.items)
-            }.flatMap flatmap@{
-                return@flatmap usersService.getDetailedUserData(it.login).toObservable()
+            }.flatMap {
+                usersService.getDetailedUserData(it.login).toObservable()
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onNext = {
                     _searchUsers.value = _searchUsers.value!!.plus(it)
-                    if (isSearchEnabled) {
-                        _usersData.value = _searchUsers.value
+                    if ((_searchUsers.value as List<DetailedUser>).size == searchItemCount) {
+                        _loadingState.value = View.GONE
                     }
                 },
                 onError = {
                     _errorState.value = true
-                    Log.e("hello", "error", it)
                 },
                 onComplete = {
 
@@ -125,14 +119,10 @@ class MainActivityViewModel @Inject constructor(
     }
 
     fun onChangeSearch(s: CharSequence, start: Int, before: Int, count: Int) {
-        Log.e("hello", s.toString())
-        if (s.length <= 3) {
-            if (!isSearchEnabled) {
-                _usersData.value = _initialUsers.value
-            } else {
-                _loadingState.value = View.INVISIBLE
-            }
+        if (s.length <= 2) {
             isSearchEnabled = false;
+            _searchUsers.postValue(emptyList())
+            _loadingState.postValue(View.GONE)
         }
         searchKeywordsPublishSubject.onNext(s.toString());
     }

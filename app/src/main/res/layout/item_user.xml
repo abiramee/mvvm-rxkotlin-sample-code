@@ -11,15 +11,20 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
             android:contentDescription="@string/todo"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:setImg="@{item.avatar_url.toString()}"

@@ -29,18 +29,3 @@ fun bindImage(imageView: ImageView, imageUrl: String) {
                 ).into(imageView)
         }
 }
-
-//@BindingAdapter("app:textChangedListener")
-//fun onTextChanged(editText: EditText, viewModel: MainActivityViewModel) {
-//    editText.addTextChangedListener(object : TextWatcher {
-//        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-//            viewModel.searchKeywords.
-//        }
-//
-//        override fun afterTextChanged(p0: Editable?) {
-//            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//        }
-//
-//        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-//    });
-//}

@@ -52,8 +52,17 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private fun observeUsers() {
         viewModel.usersData.observe(this, androidx.lifecycle.Observer {
-            adapter.submitList(it)
-            adapter.notifyDataSetChanged()
+            if (viewModel.searchUsers.value.isNullOrEmpty()) {
+                adapter.submitList(it)
+            }
+        })
+
+        viewModel.searchUsers.observe(this, androidx.lifecycle.Observer {
+            if (viewModel.isSearchEnabled) {
+                adapter.submitList(it)
+            } else {
+                adapter.submitList(viewModel.usersData.value)
+            }
         })
     }
 }

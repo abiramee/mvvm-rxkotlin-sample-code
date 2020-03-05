@@ -3,5 +3,5 @@
     <string name="search_user">Search User</string>
     <string name="todo">TODO</string>
 
-    <string name="github_authentication_token">b1a1e5b7e9553367fab08533bce7e3aad7b031bb</string>
+    <string name="github_authentication_token">Enter yours github authentication token</string>
 </resources>
