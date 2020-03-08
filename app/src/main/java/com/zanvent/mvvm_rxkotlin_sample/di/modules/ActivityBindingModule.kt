@@ -9,6 +9,6 @@ import org.jetbrains.annotations.Contract
 
 @Module
 abstract class ActivityBindingModule {
-    @ContributesAndroidInjector()
+    @ContributesAndroidInjector(modules = [MainViewModelModule::class])
     abstract fun bindMainActivity() : MainActivity
 }

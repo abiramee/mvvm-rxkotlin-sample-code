@@ -27,7 +27,6 @@ ext {
     rx_kotlin_version = "2.4.0"
     dagger_version = "2.26"
     retrofit_version = "2.7.2"
-    butterknife_version = "10.2.1"
     moshi_version = "1.8.0"
     lifecycle_version = "2.2.0"
     rxandroid_version = "2.1.1"
